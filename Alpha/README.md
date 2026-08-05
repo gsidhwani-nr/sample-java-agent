@@ -70,44 +70,53 @@ newrelic.accountId=<your-NR-account-id>
 
 ## Step 2 — Verify SAP PO Connectivity
 
-Run all 4 URLs below in a browser on the SAP server (or any machine that can reach it).
-Log in with the SAP monitoring user credentials when prompted.
+> **Note:** Replace `<HOST>` with your SAP PO hostname and `<PORT>` with your SAP PO port (default is `50000`, but your system may use a different port e.g. `51500`).
+
+Run all 4 URLs below in a browser. Log in with the SAP monitoring user credentials when prompted.
 
 ---
 
 ### URL 1 — Get Component List
 ```
-http://<HOST>:50000/mdt/messageoverviewqueryservlet
+http://<HOST>:<PORT>/mdt/messageoverviewqueryservlet
 ```
-**Expected:** XML response with `<XIComponents>` listing the PI components on this system.
-Note the `af.*` component name — you will need it in URLs 2 and 3.
+
+**Example for ACE environment:**
+```
+http://heijiace1500.hosting.heiway.net:51500/mdt/messageoverviewqueryservlet
+```
+
+**Expected:** XML response with `<XIComponents>`. Note the `af.*` component name — you need it in URLs 2 and 3.
 
 ```xml
-<!-- Example response -->
 <XIComponents>
-    <Component>af.pd1.hostname</Component>   ← note this value
-    <Component>igw.pd1.hostname</Component>
+    <Component>af.ace.heijdace1500</Component>   ← note this value
+    <Component>igw.ace.heijdace1500</Component>
     <Component>BS_ECC_ECD_CLNT_800</Component>
 </XIComponents>
 ```
 
 ---
 
-### URL 2 — Get Valid Time Window for a Component
+### URL 2 — Get Valid Time Window
+Replace `<AF-COMPONENT>` with the `af.*` component from URL 1:
 ```
-http://<HOST>:50000/mdt/messageoverviewqueryservlet?component=<AF-COMPONENT>
+http://<HOST>:<PORT>/mdt/messageoverviewqueryservlet?component=<AF-COMPONENT>
 ```
-Replace `<AF-COMPONENT>` with the `af.*` value from URL 1.
 
-**Expected:** XML with `<Views>` and `<Periods>`. Note the first `<Begin>` and `<End>` under `<Type>HOURLY</Type>` — you need them for URL 3.
+**Example:**
+```
+http://heijiace1500.hosting.heiway.net:51500/mdt/messageoverviewqueryservlet?component=af.ace.heijdace1500
+```
+
+**Expected:** XML with `<Periods>`. Copy the first `<Begin>` and `<End>` under `<Type>HOURLY</Type>`:
 
 ```xml
-<!-- Example — copy these timestamps -->
 <Period>
     <Type>HOURLY</Type>
     <Interval>
-        <Begin>2026-08-05T10:00:00.000-04:00</Begin>   ← copy
-        <End>2026-08-05T11:00:00.000-04:00</End>       ← copy
+        <Begin>2026-08-05T09:00:00.000Z</Begin>   ← copy exactly
+        <End>2026-08-05T10:00:00.000Z</End>       ← copy exactly
     </Interval>
 </Period>
 ```
@@ -115,38 +124,33 @@ Replace `<AF-COMPONENT>` with the `af.*` value from URL 1.
 ---
 
 ### URL 3 — Get Message Statistics
+Replace `<AF-COMPONENT>`, `<BEGIN>`, `<END>` with values from URLs 1 and 2:
 ```
-http://<HOST>:50000/mdt/messageoverviewqueryservlet?component=<AF-COMPONENT>&view=SR_ENTRY_VIEW_XPI&begin=<BEGIN>&end=<END>&detailedStatus=true
+http://<HOST>:<PORT>/mdt/messageoverviewqueryservlet?component=<AF-COMPONENT>&view=SR_ENTRY_VIEW_XPI&begin=<BEGIN>&end=<END>&detailedStatus=true
 ```
-Replace `<AF-COMPONENT>`, `<BEGIN>`, and `<END>` with values from URLs 1 and 2.
 
-**Expected:** `<Code>OK</Code>` with message counts per sender/receiver/interface.
-
-```xml
-<!-- Example success response -->
-<Result><Code>OK</Code></Result>
-<Data>
-    <DataRows>
-        <Row>
-            <Entry>BS_FILE2IDOC1_CUST</Entry>   <!-- Sender -->
-            <Entry>BS_ECC_ECD_CLNT_800</Entry>  <!-- Receiver -->
-            <Entry>SI_FileToIDoc</Entry>         <!-- Interface -->
-            <Entry>5</Entry>                     <!-- System Error count -->
-            <Entry>3</Entry>                     <!-- Waiting count -->
-        </Row>
-    </DataRows>
-</Data>
+**Example:**
 ```
+http://heijiace1500.hosting.heiway.net:51500/mdt/messageoverviewqueryservlet?component=af.ace.heijdace1500&view=SR_ENTRY_VIEW_XPI&begin=2026-08-05T09:00:00.000Z&end=2026-08-05T10:00:00.000Z&detailedStatus=true
+```
+
+**Expected:** `<Code>OK</Code>` with message rows per interface.
 
 ---
 
 ### URL 4 — Verify SOAP API (Individual Messages)
 ```
-http://<HOST>:50000/AdapterMessageMonitoring/basic?wsdl&mode=ws_policy&style=document
+http://<HOST>:<PORT>/AdapterMessageMonitoring/basic?wsdl&mode=ws_policy&style=document
 ```
-**Expected:** An XML WSDL document starting with `<wsdl:definitions ...>`.
 
-If this returns a WSDL, individual message IDs can also be pulled. If it returns 404, only aggregate data will be collected (still sufficient for monitoring dashboards).
+**Example:**
+```
+http://heijiace1500.hosting.heiway.net:51500/AdapterMessageMonitoring/basic?wsdl&mode=ws_policy&style=document
+```
+
+> **Note:** The application uses `?style=document` (without `wsdl`) at runtime to make actual SOAP calls. The `?wsdl` URL above is only for verifying the service exists.
+
+**Expected:** An XML WSDL document starting with `<wsdl:definitions ...>`. If 404, only aggregate data will be collected (still sufficient for dashboards).
 
 ---
 
