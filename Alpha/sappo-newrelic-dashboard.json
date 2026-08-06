@@ -16,7 +16,7 @@
           "visualization": { "id": "viz.billboard" },
           "rawConfiguration": {
             "nrqlQueries": [{ "accountId": 4294016,
-              "query": "SELECT latest(sappo.messages.total) AS 'Total' FROM Metric WHERE env = '{{env}}' AND hourBegin = '{{BeginHour}}'"
+              "query": "SELECT latest(sappo.messages.total) AS 'Total' FROM Metric WHERE env IN ({{env}}) AND hourBegin IN ({{BeginHour}})"
             }],
             "thresholds": []
           }
@@ -29,7 +29,7 @@
           "visualization": { "id": "viz.billboard" },
           "rawConfiguration": {
             "nrqlQueries": [{ "accountId": 4294016,
-              "query": "SELECT latest(sappo.messages.success) AS 'Successful' FROM Metric WHERE env = '{{env}}' AND hourBegin = '{{BeginHour}}'"
+              "query": "SELECT latest(sappo.messages.success) AS 'Successful' FROM Metric WHERE env IN ({{env}}) AND hourBegin IN ({{BeginHour}})"
             }],
             "thresholds": []
           }
@@ -42,7 +42,7 @@
           "visualization": { "id": "viz.billboard" },
           "rawConfiguration": {
             "nrqlQueries": [{ "accountId": 4294016,
-              "query": "SELECT latest(sappo.messages.systemError) AS 'System Errors' FROM Metric WHERE env = '{{env}}' AND hourBegin = '{{BeginHour}}'"
+              "query": "SELECT latest(sappo.messages.systemError) AS 'System Errors' FROM Metric WHERE env IN ({{env}}) AND hourBegin IN ({{BeginHour}})"
             }],
             "thresholds": [
               { "alertSeverity": "WARNING", "value": 1 },
@@ -58,7 +58,7 @@
           "visualization": { "id": "viz.billboard" },
           "rawConfiguration": {
             "nrqlQueries": [{ "accountId": 4294016,
-              "query": "SELECT latest(sappo.messages.waiting) AS 'Waiting' FROM Metric WHERE env = '{{env}}' AND hourBegin = '{{BeginHour}}'"
+              "query": "SELECT latest(sappo.messages.waiting) AS 'Waiting' FROM Metric WHERE env IN ({{env}}) AND hourBegin IN ({{BeginHour}})"
             }],
             "thresholds": [
               { "alertSeverity": "WARNING", "value": 5 },
@@ -74,7 +74,7 @@
           "visualization": { "id": "viz.billboard" },
           "rawConfiguration": {
             "nrqlQueries": [{ "accountId": 4294016,
-              "query": "SELECT latest(sappo.messages.errorRate) AS 'Error Rate %' FROM Metric WHERE env = '{{env}}' AND hourBegin = '{{BeginHour}}'"
+              "query": "SELECT latest(sappo.messages.errorRate) AS 'Error Rate %' FROM Metric WHERE env IN ({{env}}) AND hourBegin IN ({{BeginHour}})"
             }],
             "thresholds": [
               { "alertSeverity": "WARNING", "value": 5 },
@@ -90,7 +90,7 @@
           "visualization": { "id": "viz.billboard" },
           "rawConfiguration": {
             "nrqlQueries": [{ "accountId": 4294016,
-              "query": "SELECT latest(sappo.messages.processing) AS 'Processing', latest(sappo.messages.cancelled) AS 'Cancelled' FROM Metric WHERE env = '{{env}}' AND hourBegin = '{{BeginHour}}'"
+              "query": "SELECT latest(sappo.messages.processing) AS 'Processing', latest(sappo.messages.cancelled) AS 'Cancelled' FROM Metric WHERE env IN ({{env}}) AND hourBegin IN ({{BeginHour}})"
             }],
             "thresholds": []
           }
@@ -103,7 +103,7 @@
           "visualization": { "id": "viz.pie" },
           "rawConfiguration": {
             "nrqlQueries": [{ "accountId": 4294016,
-              "query": "SELECT latest(sappo.messages.success) AS 'Success', latest(sappo.messages.systemError) AS 'System Error', latest(sappo.messages.waiting) AS 'Waiting', latest(sappo.messages.processing) AS 'Processing', latest(sappo.messages.cancelled) AS 'Cancelled' FROM Metric WHERE env = '{{env}}' AND hourBegin = '{{BeginHour}}'"
+              "query": "SELECT latest(sappo.messages.success) AS 'Success', latest(sappo.messages.systemError) AS 'System Error', latest(sappo.messages.waiting) AS 'Waiting', latest(sappo.messages.processing) AS 'Processing', latest(sappo.messages.cancelled) AS 'Cancelled' FROM Metric WHERE env IN ({{env}}) AND hourBegin IN ({{BeginHour}})"
             }]
           }
         },
@@ -115,7 +115,7 @@
           "visualization": { "id": "viz.line" },
           "rawConfiguration": {
             "nrqlQueries": [{ "accountId": 4294016,
-              "query": "SELECT latest(sappo.messages.errorRate) AS 'Error Rate %' FROM Metric WHERE env = '{{env}}' AND hourBegin = '{{BeginHour}}' TIMESERIES 5 minutes"
+              "query": "SELECT latest(sappo.messages.errorRate) AS 'Error Rate %' FROM Metric WHERE env IN ({{env}}) AND hourBegin IN ({{BeginHour}}) TIMESERIES 5 minutes"
             }],
             "yAxisLeft": { "min": 0 }
           }
@@ -128,7 +128,7 @@
           "visualization": { "id": "viz.area" },
           "rawConfiguration": {
             "nrqlQueries": [{ "accountId": 4294016,
-              "query": "SELECT latest(sappo.messages.total) AS 'Total', latest(sappo.messages.error) AS 'Errors', latest(sappo.messages.waiting) AS 'Waiting' FROM Metric WHERE env = '{{env}}' AND hourBegin = '{{BeginHour}}' TIMESERIES 5 minutes"
+              "query": "SELECT latest(sappo.messages.total) AS 'Total', latest(sappo.messages.error) AS 'Errors', latest(sappo.messages.waiting) AS 'Waiting' FROM Metric WHERE env IN ({{env}}) AND hourBegin IN ({{BeginHour}}) TIMESERIES 5 minutes"
             }]
           }
         },
@@ -140,7 +140,7 @@
           "visualization": { "id": "viz.bar" },
           "rawConfiguration": {
             "nrqlQueries": [{ "accountId": 4294016,
-              "query": "SELECT latest(totalCount) AS 'Messages' FROM SapPoMessageFlow WHERE env = '{{env}}' AND hourBegin = '{{BeginHour}}' FACET interfaceName LIMIT 15"
+              "query": "SELECT latest(totalCount) AS 'Messages' FROM SapPoMessageFlow WHERE env IN ({{env}}) AND hourBegin IN ({{BeginHour}}) FACET interfaceName LIMIT 15"
             }]
           }
         },
@@ -152,7 +152,7 @@
           "visualization": { "id": "viz.bar" },
           "rawConfiguration": {
             "nrqlQueries": [{ "accountId": 4294016,
-              "query": "SELECT latest(systemErrorCount) AS 'Errors' FROM SapPoMessageFlow WHERE env = '{{env}}' AND hourBegin = '{{BeginHour}}' AND systemErrorCount > 0 FACET interfaceName LIMIT 15"
+              "query": "SELECT latest(systemErrorCount) AS 'Errors' FROM SapPoMessageFlow WHERE env IN ({{env}}) AND hourBegin IN ({{BeginHour}}) AND systemErrorCount > 0 FACET interfaceName LIMIT 15"
             }]
           }
         },
@@ -164,7 +164,7 @@
           "visualization": { "id": "viz.table" },
           "rawConfiguration": {
             "nrqlQueries": [{ "accountId": 4294016,
-              "query": "SELECT latest(totalCount) AS 'Total', latest(successCount) AS 'Success', latest(systemErrorCount) AS 'Errors', latest(waitingCount) AS 'Waiting', latest(processingCount) AS 'Processing', latest(cancelledCount) AS 'Cancelled', latest(hourBegin) AS 'SAP Hour', latest(interfaceNamespace) AS 'Namespace' FROM SapPoMessageFlow WHERE component LIKE 'af.%' AND env = '{{env}}' AND hourBegin = '{{BeginHour}}' FACET senderComponent, receiverComponent, interfaceName LIMIT 100"
+              "query": "SELECT latest(totalCount) AS 'Total', latest(successCount) AS 'Success', latest(systemErrorCount) AS 'Errors', latest(waitingCount) AS 'Waiting', latest(processingCount) AS 'Processing', latest(cancelledCount) AS 'Cancelled', latest(hourBegin) AS 'SAP Hour', latest(interfaceNamespace) AS 'Namespace' FROM SapPoMessageFlow WHERE component LIKE 'af.%' AND env IN ({{env}}) AND hourBegin IN ({{BeginHour}}) FACET senderComponent, receiverComponent, interfaceName LIMIT 100"
             }]
           }
         }
@@ -183,7 +183,7 @@
           "visualization": { "id": "viz.bar" },
           "rawConfiguration": {
             "nrqlQueries": [{ "accountId": 4294016,
-              "query": "SELECT latest(systemErrorCount) AS 'Errors' FROM SapPoMessageFlow WHERE env = '{{env}}' AND hourBegin = '{{BeginHour}}' AND systemErrorCount > 0 FACET senderComponent, interfaceName LIMIT 20"
+              "query": "SELECT latest(systemErrorCount) AS 'Errors' FROM SapPoMessageFlow WHERE env IN ({{env}}) AND hourBegin IN ({{BeginHour}}) AND systemErrorCount > 0 FACET senderComponent, interfaceName LIMIT 20"
             }]
           }
         },
@@ -195,7 +195,7 @@
           "visualization": { "id": "viz.bar" },
           "rawConfiguration": {
             "nrqlQueries": [{ "accountId": 4294016,
-              "query": "SELECT latest(waitingCount) AS 'Waiting' FROM SapPoMessageFlow WHERE env = '{{env}}' AND hourBegin = '{{BeginHour}}' AND waitingCount > 0 FACET senderComponent, interfaceName LIMIT 20"
+              "query": "SELECT latest(waitingCount) AS 'Waiting' FROM SapPoMessageFlow WHERE env IN ({{env}}) AND hourBegin IN ({{BeginHour}}) AND waitingCount > 0 FACET senderComponent, interfaceName LIMIT 20"
             }]
           }
         },
@@ -207,7 +207,7 @@
           "visualization": { "id": "viz.pie" },
           "rawConfiguration": {
             "nrqlQueries": [{ "accountId": 4294016,
-              "query": "SELECT latest(systemErrorCount) FROM SapPoMessageFlow WHERE env = '{{env}}' AND hourBegin = '{{BeginHour}}' AND systemErrorCount > 0 FACET senderComponent LIMIT 20"
+              "query": "SELECT latest(systemErrorCount) FROM SapPoMessageFlow WHERE env IN ({{env}}) AND hourBegin IN ({{BeginHour}}) AND systemErrorCount > 0 FACET senderComponent LIMIT 20"
             }]
           }
         },
@@ -219,7 +219,7 @@
           "visualization": { "id": "viz.line" },
           "rawConfiguration": {
             "nrqlQueries": [{ "accountId": 4294016,
-              "query": "SELECT latest(sappo.messages.errorRate) AS 'Error Rate %', latest(sappo.messages.systemError) AS 'System Errors' FROM Metric WHERE env = '{{env}}' AND hourBegin = '{{BeginHour}}' TIMESERIES 5 minutes"
+              "query": "SELECT latest(sappo.messages.errorRate) AS 'Error Rate %', latest(sappo.messages.systemError) AS 'System Errors' FROM Metric WHERE env IN ({{env}}) AND hourBegin IN ({{BeginHour}}) TIMESERIES 5 minutes"
             }]
           }
         },
@@ -231,7 +231,7 @@
           "visualization": { "id": "viz.table" },
           "rawConfiguration": {
             "nrqlQueries": [{ "accountId": 4294016,
-              "query": "SELECT latest(systemErrorCount) AS 'Errors', latest(waitingCount) AS 'Waiting', latest(totalCount) AS 'Total' FROM SapPoMessageFlow WHERE env = '{{env}}' AND hourBegin = '{{BeginHour}}' AND (systemErrorCount > 0 OR waitingCount > 0) FACET interfaceName, senderComponent LIMIT 50"
+              "query": "SELECT latest(systemErrorCount) AS 'Errors', latest(waitingCount) AS 'Waiting', latest(totalCount) AS 'Total' FROM SapPoMessageFlow WHERE env IN ({{env}}) AND hourBegin IN ({{BeginHour}}) AND (systemErrorCount > 0 OR waitingCount > 0) FACET interfaceName, senderComponent LIMIT 50"
             }]
           }
         },
@@ -243,7 +243,7 @@
           "visualization": { "id": "viz.table" },
           "rawConfiguration": {
             "nrqlQueries": [{ "accountId": 4294016,
-              "query": "SELECT messageGuid, status, interfaceName, errorCategory, errorText, senderComponent, receiverComponent, processingTimeMs, retries, timesFailed FROM SapPoMessage WHERE env = '{{env}}' AND (isError = true OR status IN ('WAITING','HOLDING','TO_BE_DELIVERED')) ORDER BY timestamp DESC LIMIT 100"
+              "query": "SELECT messageGuid, status, interfaceName, errorCategory, errorText, senderComponent, receiverComponent, processingTimeMs, retries, timesFailed FROM SapPoMessage WHERE env IN ({{env}}) AND hourBegin IN ({{BeginHour}}) AND (isError = true OR status IN ('WAITING','HOLDING','TO_BE_DELIVERED')) ORDER BY timestamp DESC LIMIT 100"
             }]
           }
         }
@@ -262,7 +262,7 @@
           "visualization": { "id": "viz.area" },
           "rawConfiguration": {
             "nrqlQueries": [{ "accountId": 4294016,
-              "query": "SELECT max(sappo.messages.total) AS 'Total', max(sappo.messages.success) AS 'Success', max(sappo.messages.error) AS 'Errors', max(sappo.messages.waiting) AS 'Waiting' FROM Metric WHERE env = '{{env}}' TIMESERIES 1 hour"
+              "query": "SELECT max(sappo.messages.total) AS 'Total', max(sappo.messages.success) AS 'Success', max(sappo.messages.error) AS 'Errors', max(sappo.messages.waiting) AS 'Waiting' FROM Metric WHERE env IN ({{env}}) TIMESERIES 1 hour"
             }]
           }
         },
@@ -274,7 +274,7 @@
           "visualization": { "id": "viz.line" },
           "rawConfiguration": {
             "nrqlQueries": [{ "accountId": 4294016,
-              "query": "SELECT max(sappo.messages.error) AS 'Peak Errors' FROM Metric WHERE env = '{{env}}' TIMESERIES 1 hour"
+              "query": "SELECT max(sappo.messages.error) AS 'Peak Errors' FROM Metric WHERE env IN ({{env}}) TIMESERIES 1 hour"
             }]
           }
         },
@@ -286,7 +286,7 @@
           "visualization": { "id": "viz.line" },
           "rawConfiguration": {
             "nrqlQueries": [{ "accountId": 4294016,
-              "query": "SELECT max(sappo.messages.errorRate) AS 'Error Rate %' FROM Metric WHERE env = '{{env}}' TIMESERIES 1 hour"
+              "query": "SELECT max(sappo.messages.errorRate) AS 'Error Rate %' FROM Metric WHERE env IN ({{env}}) TIMESERIES 1 hour"
             }],
             "yAxisLeft": { "min": 0 }
           }
@@ -299,7 +299,7 @@
           "visualization": { "id": "viz.line" },
           "rawConfiguration": {
             "nrqlQueries": [{ "accountId": 4294016,
-              "query": "SELECT latest(totalCount) FROM SapPoMessageFlow WHERE env = '{{env}}' FACET interfaceName TIMESERIES 5 minutes LIMIT 10"
+              "query": "SELECT latest(totalCount) FROM SapPoMessageFlow WHERE env IN ({{env}}) FACET interfaceName TIMESERIES 5 minutes LIMIT 10"
             }]
           }
         }
@@ -338,7 +338,7 @@
       },
       "nrqlQuery": {
         "accountIds": [4294016],
-        "query": "SELECT uniques(hourBegin) FROM SapPoMessageFlow WHERE env = '{{env}}' SINCE 3 hours ago"
+        "query": "SELECT uniques(hourBegin) FROM SapPoMessageFlow WHERE env IN ({{env}}) SINCE 3 hours ago"
       }
     }
   ]
