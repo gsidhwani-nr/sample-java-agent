@@ -1,0 +1,228 @@
+{
+  "name": "SAP PO Message Monitor",
+  "permissions": "PUBLIC_READ_WRITE",
+  "variables": [
+    {
+      "name": "hourBegin",
+      "title": "SAP PO Hour",
+      "type": "NRQL",
+      "defaultValues": [{"value": {"string": ""}}],
+      "isMultiSelection": false,
+      "replacementStrategy": "STRING",
+      "nrqlQuery": {
+        "accountIds": [4294016],
+        "query": "SELECT uniques(hourBegin) FROM SapPoMessageFlow WHERE component LIKE 'af.%' SINCE 3 hours ago LIMIT 10"
+      }
+    }
+  ],
+  "pages": [
+    {
+      "name": "Overview",
+      "widgets": [
+        {
+          "title": "Total Messages",
+          "layout": { "column": 1, "row": 1, "width": 2, "height": 3 },
+          "visualization": { "id": "viz.billboard" },
+          "rawConfiguration": {
+            "nrqlQueries": [{ "accountId": 4294016, "query": "SELECT latest(sappo.messages.total) AS 'Total' FROM Metric" }],
+            "thresholds": []
+          }
+        },
+        {
+          "title": "Successful",
+          "layout": { "column": 3, "row": 1, "width": 2, "height": 3 },
+          "visualization": { "id": "viz.billboard" },
+          "rawConfiguration": {
+            "nrqlQueries": [{ "accountId": 4294016, "query": "SELECT latest(sappo.messages.success) AS 'Successful' FROM Metric" }],
+            "thresholds": []
+          }
+        },
+        {
+          "title": "System Errors",
+          "layout": { "column": 5, "row": 1, "width": 2, "height": 3 },
+          "visualization": { "id": "viz.billboard" },
+          "rawConfiguration": {
+            "nrqlQueries": [{ "accountId": 4294016, "query": "SELECT latest(sappo.messages.systemError) AS 'System Errors' FROM Metric" }],
+            "thresholds": [
+              { "alertSeverity": "WARNING", "value": 1 },
+              { "alertSeverity": "CRITICAL", "value": 10 }
+            ]
+          }
+        },
+        {
+          "title": "Waiting",
+          "layout": { "column": 7, "row": 1, "width": 2, "height": 3 },
+          "visualization": { "id": "viz.billboard" },
+          "rawConfiguration": {
+            "nrqlQueries": [{ "accountId": 4294016, "query": "SELECT latest(sappo.messages.waiting) AS 'Waiting' FROM Metric" }],
+            "thresholds": [
+              { "alertSeverity": "WARNING", "value": 5 },
+              { "alertSeverity": "CRITICAL", "value": 50 }
+            ]
+          }
+        },
+        {
+          "title": "Error Rate %",
+          "layout": { "column": 9, "row": 1, "width": 2, "height": 3 },
+          "visualization": { "id": "viz.billboard" },
+          "rawConfiguration": {
+            "nrqlQueries": [{ "accountId": 4294016, "query": "SELECT latest(sappo.messages.errorRate) AS 'Error Rate %' FROM Metric" }],
+            "thresholds": [
+              { "alertSeverity": "WARNING", "value": 5 },
+              { "alertSeverity": "CRITICAL", "value": 20 }
+            ]
+          }
+        },
+        {
+          "title": "Processing + Cancelled",
+          "layout": { "column": 11, "row": 1, "width": 2, "height": 3 },
+          "visualization": { "id": "viz.billboard" },
+          "rawConfiguration": {
+            "nrqlQueries": [{ "accountId": 4294016, "query": "SELECT latest(sappo.messages.processing) AS 'Processing', latest(sappo.messages.cancelled) AS 'Cancelled' FROM Metric" }],
+            "thresholds": []
+          }
+        },
+        {
+          "title": "Message Status Distribution",
+          "layout": { "column": 1, "row": 4, "width": 4, "height": 4 },
+          "visualization": { "id": "viz.pie" },
+          "rawConfiguration": {
+            "nrqlQueries": [{ "accountId": 4294016, "query": "SELECT latest(successCount) AS 'Success', latest(systemErrorCount) AS 'System Error', latest(waitingCount) AS 'Waiting', latest(processingCount) AS 'Processing', latest(cancelledCount) AS 'Cancelled' FROM SapPoMessageFlow WHERE component LIKE 'af.%' AND ({{hourBegin}} = '' OR hourBegin = {{hourBegin}})" }]
+          }
+        },
+        {
+          "title": "Error Rate Trend",
+          "layout": { "column": 5, "row": 4, "width": 4, "height": 4 },
+          "visualization": { "id": "viz.line" },
+          "rawConfiguration": {
+            "nrqlQueries": [{ "accountId": 4294016, "query": "SELECT latest(sappo.messages.errorRate) AS 'Error Rate %' FROM Metric TIMESERIES 5 minutes" }],
+            "yAxisLeft": { "min": 0 }
+          }
+        },
+        {
+          "title": "Message Volume Trend",
+          "layout": { "column": 9, "row": 4, "width": 4, "height": 4 },
+          "visualization": { "id": "viz.area" },
+          "rawConfiguration": {
+            "nrqlQueries": [{ "accountId": 4294016, "query": "SELECT latest(sappo.messages.total) AS 'Total', latest(sappo.messages.error) AS 'Errors', latest(sappo.messages.waiting) AS 'Waiting' FROM Metric TIMESERIES 5 minutes" }]
+          }
+        },
+        {
+          "title": "Top Interfaces by Volume",
+          "layout": { "column": 1, "row": 8, "width": 6, "height": 4 },
+          "visualization": { "id": "viz.bar" },
+          "rawConfiguration": {
+            "nrqlQueries": [{ "accountId": 4294016, "query": "SELECT latest(totalCount) AS 'Messages' FROM SapPoMessageFlow FACET interfaceName LIMIT 15" }]
+          }
+        },
+        {
+          "title": "Top Interfaces with Errors",
+          "layout": { "column": 7, "row": 8, "width": 6, "height": 4 },
+          "visualization": { "id": "viz.bar" },
+          "rawConfiguration": {
+            "nrqlQueries": [{ "accountId": 4294016, "query": "SELECT latest(systemErrorCount) AS 'Errors' FROM SapPoMessageFlow WHERE systemErrorCount > 0 FACET interfaceName LIMIT 15" }]
+          }
+        },
+        {
+          "title": "All Interfaces — Full Breakdown",
+          "layout": { "column": 1, "row": 12, "width": 12, "height": 5 },
+          "visualization": { "id": "viz.table" },
+          "rawConfiguration": {
+            "nrqlQueries": [{ "accountId": 4294016, "query": "SELECT latest(totalCount) AS 'Total', latest(successCount) AS 'Success', latest(systemErrorCount) AS 'Errors', latest(waitingCount) AS 'Waiting', latest(processingCount) AS 'Processing', latest(cancelledCount) AS 'Cancelled', latest(hourBegin) AS 'SAP Hour', latest(interfaceNamespace) AS 'Namespace' FROM SapPoMessageFlow WHERE component LIKE 'af.%' AND ({{hourBegin}} = '' OR hourBegin = {{hourBegin}}) FACET senderComponent, receiverComponent, interfaceName LIMIT 100 ORDER BY latest(totalCount) DESC" }]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Error Analysis",
+      "widgets": [
+        {
+          "title": "Interfaces with Errors",
+          "layout": { "column": 1, "row": 1, "width": 6, "height": 4 },
+          "visualization": { "id": "viz.bar" },
+          "rawConfiguration": {
+            "nrqlQueries": [{ "accountId": 4294016, "query": "SELECT latest(systemErrorCount) AS 'Errors' FROM SapPoMessageFlow WHERE systemErrorCount > 0 FACET senderComponent, interfaceName LIMIT 20" }]
+          }
+        },
+        {
+          "title": "Interfaces with Waiting Messages",
+          "layout": { "column": 7, "row": 1, "width": 6, "height": 4 },
+          "visualization": { "id": "viz.bar" },
+          "rawConfiguration": {
+            "nrqlQueries": [{ "accountId": 4294016, "query": "SELECT latest(waitingCount) AS 'Waiting' FROM SapPoMessageFlow WHERE waitingCount > 0 FACET senderComponent, interfaceName LIMIT 20" }]
+          }
+        },
+        {
+          "title": "Errors by Sender Component",
+          "layout": { "column": 1, "row": 5, "width": 4, "height": 4 },
+          "visualization": { "id": "viz.pie" },
+          "rawConfiguration": {
+            "nrqlQueries": [{ "accountId": 4294016, "query": "SELECT latest(systemErrorCount) FROM SapPoMessageFlow WHERE systemErrorCount > 0 FACET senderComponent LIMIT 20" }]
+          }
+        },
+        {
+          "title": "Error Rate Over Time",
+          "layout": { "column": 5, "row": 5, "width": 8, "height": 4 },
+          "visualization": { "id": "viz.line" },
+          "rawConfiguration": {
+            "nrqlQueries": [{ "accountId": 4294016, "query": "SELECT latest(sappo.messages.errorRate) AS 'Error Rate %', latest(sappo.messages.systemError) AS 'System Errors' FROM Metric TIMESERIES 5 minutes" }]
+          }
+        },
+        {
+          "title": "Interfaces with Errors and Waiting",
+          "layout": { "column": 1, "row": 9, "width": 12, "height": 4 },
+          "visualization": { "id": "viz.table" },
+          "rawConfiguration": {
+            "nrqlQueries": [{ "accountId": 4294016, "query": "SELECT latest(systemErrorCount) AS 'Errors', latest(waitingCount) AS 'Waiting', latest(totalCount) AS 'Total' FROM SapPoMessageFlow WHERE systemErrorCount > 0 OR waitingCount > 0 FACET interfaceName, senderComponent LIMIT 50" }]
+          }
+        },
+        {
+          "title": "Individual Error Messages (requires SOAP enabled)",
+          "layout": { "column": 1, "row": 13, "width": 12, "height": 5 },
+          "visualization": { "id": "viz.table" },
+          "rawConfiguration": {
+            "nrqlQueries": [{ "accountId": 4294016, "query": "SELECT messageGuid, status, interfaceName, errorCategory, errorText, senderComponent, receiverComponent, processingTimeMs, retries, timesFailed FROM SapPoMessage WHERE isError = true OR status IN ('WAITING','HOLDING','TO_BE_DELIVERED') ORDER BY timestamp DESC LIMIT 100" }]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Hourly Trend",
+      "widgets": [
+        {
+          "title": "Message Volume Per Hour",
+          "layout": { "column": 1, "row": 1, "width": 12, "height": 4 },
+          "visualization": { "id": "viz.area" },
+          "rawConfiguration": {
+            "nrqlQueries": [{ "accountId": 4294016, "query": "SELECT max(sappo.messages.total) AS 'Total', max(sappo.messages.success) AS 'Success', max(sappo.messages.error) AS 'Errors', max(sappo.messages.waiting) AS 'Waiting' FROM Metric TIMESERIES 1 hour" }]
+          }
+        },
+        {
+          "title": "Peak Error Count Per Hour",
+          "layout": { "column": 1, "row": 5, "width": 6, "height": 4 },
+          "visualization": { "id": "viz.line" },
+          "rawConfiguration": {
+            "nrqlQueries": [{ "accountId": 4294016, "query": "SELECT max(sappo.messages.error) AS 'Peak Errors' FROM Metric TIMESERIES 1 hour" }]
+          }
+        },
+        {
+          "title": "Error Rate Per Hour",
+          "layout": { "column": 7, "row": 5, "width": 6, "height": 4 },
+          "visualization": { "id": "viz.line" },
+          "rawConfiguration": {
+            "nrqlQueries": [{ "accountId": 4294016, "query": "SELECT max(sappo.messages.errorRate) AS 'Error Rate %' FROM Metric TIMESERIES 1 hour" }],
+            "yAxisLeft": { "min": 0 }
+          }
+        },
+        {
+          "title": "Top Interfaces Over Time",
+          "layout": { "column": 1, "row": 9, "width": 12, "height": 4 },
+          "visualization": { "id": "viz.line" },
+          "rawConfiguration": {
+            "nrqlQueries": [{ "accountId": 4294016, "query": "SELECT latest(totalCount) FROM SapPoMessageFlow FACET interfaceName TIMESERIES 5 minutes LIMIT 10" }]
+          }
+        }
+      ]
+    }
+  ]
+}
