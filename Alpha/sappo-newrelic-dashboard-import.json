@@ -401,7 +401,7 @@
             "nrqlQueries": [
               {
                 "accountId": 1074083,
-                "query": "SELECT messageGuid, status, interfaceName, errorCategory, errorText, senderComponent, receiverComponent, processingTimeMs, retries, timesFailed FROM SapPoMessage WHERE env IN ({{env}}) AND hourBegin IN ({{BeginHour}}) AND (isError = true OR status IN ('WAITING','HOLDING','TO_BE_DELIVERED')) ORDER BY timestamp DESC LIMIT 100"
+                "query": "SELECT latest(status) AS 'Status', latest(errorCategory) AS 'Error Category', latest(errorText) AS 'Error Text', latest(senderComponent) AS 'Sender', latest(receiverComponent) AS 'Receiver', latest(interfaceName) AS 'Interface', latest(interfaceNamespace) AS 'Namespace', latest(processingTimeMs) AS 'Duration ms', latest(retries) AS 'Retries', latest(timesFailed) AS 'Times Failed' FROM SapPoMessage WHERE env IN ({{env}}) AND hourBegin IN ({{BeginHour}}) AND (isError = true OR status IN ('WAITING','HOLDING','TO_BE_DELIVERED')) FACET messageGuid LIMIT 200"
               }
             ]
           }
