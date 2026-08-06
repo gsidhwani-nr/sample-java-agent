@@ -103,7 +103,7 @@
           "visualization": { "id": "viz.pie" },
           "rawConfiguration": {
             "nrqlQueries": [{ "accountId": 4294016,
-              "query": "SELECT latest(sappo.messages.success) AS 'Success', latest(sappo.messages.systemError) AS 'System Error', latest(sappo.messages.waiting) AS 'Waiting', latest(sappo.messages.processing) AS 'Processing', latest(sappo.messages.cancelled) AS 'Cancelled' FROM Metric"
+              "query": "SELECT latest(sappo.messages.success) AS 'Success', latest(sappo.messages.systemError) AS 'System Error', latest(sappo.messages.waiting) AS 'Waiting', latest(sappo.messages.processing) AS 'Processing', latest(sappo.messages.cancelled) AS 'Cancelled' FROM Metric WHERE env = '{{env}}' AND hourBegin = '{{BeginHour}}'"
             }]
           }
         },
@@ -262,7 +262,7 @@
           "visualization": { "id": "viz.area" },
           "rawConfiguration": {
             "nrqlQueries": [{ "accountId": 4294016,
-              "query": "SELECT max(sappo.messages.total) AS 'Total', max(sappo.messages.success) AS 'Success', max(sappo.messages.error) AS 'Errors', max(sappo.messages.waiting) AS 'Waiting' FROM Metric WHERE env = '{{env}}' AND hourBegin = '{{BeginHour}}' TIMESERIES 1 hour"
+              "query": "SELECT max(sappo.messages.total) AS 'Total', max(sappo.messages.success) AS 'Success', max(sappo.messages.error) AS 'Errors', max(sappo.messages.waiting) AS 'Waiting' FROM Metric WHERE env = '{{env}}' TIMESERIES 1 hour"
             }]
           }
         },
@@ -274,7 +274,7 @@
           "visualization": { "id": "viz.line" },
           "rawConfiguration": {
             "nrqlQueries": [{ "accountId": 4294016,
-              "query": "SELECT max(sappo.messages.error) AS 'Peak Errors' FROM Metric WHERE env = '{{env}}' AND hourBegin = '{{BeginHour}}' TIMESERIES 1 hour"
+              "query": "SELECT max(sappo.messages.error) AS 'Peak Errors' FROM Metric WHERE env = '{{env}}' TIMESERIES 1 hour"
             }]
           }
         },
@@ -286,7 +286,7 @@
           "visualization": { "id": "viz.line" },
           "rawConfiguration": {
             "nrqlQueries": [{ "accountId": 4294016,
-              "query": "SELECT max(sappo.messages.errorRate) AS 'Error Rate %' FROM Metric WHERE env = '{{env}}' AND hourBegin = '{{BeginHour}}' TIMESERIES 1 hour"
+              "query": "SELECT max(sappo.messages.errorRate) AS 'Error Rate %' FROM Metric WHERE env = '{{env}}' TIMESERIES 1 hour"
             }],
             "yAxisLeft": { "min": 0 }
           }
